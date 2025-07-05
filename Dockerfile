@@ -1,5 +1,5 @@
 
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
@@ -8,6 +8,8 @@ ENV GO111MODULE=on \
     GOPROXY=direct
 
 WORKDIR /build
+
+RUN apk add --no-cache git
 
 COPY go.sum .
 
