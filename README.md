@@ -39,13 +39,13 @@ Example JSON from Coroot:
 ```
 Example message for VK Teams:
 ```
-Deployed: city-gateway-01:Deployment:city-gateway
+Deployed: gateway:Deployment:gateway
 - 💔 Latency: 93.37% of requests faster 500ms (objective: 99%)
 - 🎉 CPU usage: -7% compared to the previous deployment
 - 💔 Memory usage: +6% compared to the previous deployment
 - 💔 Logs: the number of errors in the logs has increased by 336%
 
-http://coroot.apps.citydrive-main.dev.citydrive.tech/p/elf2lyow/app/city-gateway-01:Deployment:city-gateway/Deployments#c855dcb5b:1744807395
+http://coroot.apps.tech/p/elf2lyow/app/gateway:Deployment:gateway/Deployments#c855dcb5b:1744807395
 ```
 
 ## Health
