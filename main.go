@@ -7,8 +7,8 @@ import (
 
 	"context"
 
-	"coroot-webhook-proxy/config"
-	"coroot-webhook-proxy/handler"
+	"github.com/Gakhramanzode/coroot-webhook-proxy/config"
+	"github.com/Gakhramanzode/coroot-webhook-proxy/handler"
 
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"

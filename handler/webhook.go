@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"coroot-webhook-proxy/config"
-	"coroot-webhook-proxy/vk"
+	"github.com/Gakhramanzode/coroot-webhook-proxy/config"
+	"github.com/Gakhramanzode/coroot-webhook-proxy/vk"
 )
 
 type CorootWebhook struct {
