@@ -3,10 +3,11 @@ name: Docker Image CI
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
     tags:
       - v*
+  pull_request:
+    branches: [ "master" ]
+
 env:
   IMAGE_NAME: coroot-webhook-proxy
 
