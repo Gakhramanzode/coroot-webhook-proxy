@@ -1,4 +1,4 @@
-module coroot-webhook-proxy
+module github.com/Gakhramanzode/coroot-webhook-proxy
 
 go 1.23.0
 

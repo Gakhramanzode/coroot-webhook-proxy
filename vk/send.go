@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"coroot-webhook-proxy/config"
+	"github.com/Gakhramanzode/coroot-webhook-proxy/config"
 )
 
 func SendMessage(cfg config.Config, text string) error {
