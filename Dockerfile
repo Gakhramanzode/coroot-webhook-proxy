@@ -9,7 +9,7 @@ ENV GO111MODULE=on \
 
 WORKDIR /build
 
-RUN apt-get update && apt-get install -y git
+RUN apk add --no-cache git
 
 COPY go.sum .
 
