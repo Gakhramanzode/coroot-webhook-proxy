@@ -1,21 +1,15 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
+	"bytes"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/Gakhramanzode/coroot-webhook-proxy/config"
 	"github.com/Gakhramanzode/coroot-webhook-proxy/vk"
 )
-
-type CorootWebhook struct {
-	Status      string   `json:"status"`
-	Application string   `json:"application"`
-	Summary     []string `json:"summary"`
-	URL         string   `json:"url"`
-}
 
 func WebhookHandler(cfg config.Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -24,39 +18,34 @@ func WebhookHandler(cfg config.Config) http.HandlerFunc {
 			return
 		}
 
-		var payload CorootWebhook
-		err := json.NewDecoder(r.Body).Decode(&payload)
+		// read a Coroot UI template text
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			log.Println("Invalid JSON:", err)
+			log.Println("read body error:", err)
 			http.Error(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
+		// debug: restore r.Body (if will need in someplace else)
+		r.Body = io.NopCloser(bytes.NewReader(body))
 
-		// Logging received data JSON
-		log.Printf("Received webhook from Coroot: %+v", payload)
+		// logging the final text:
+		// text which created via go-tenplate https://docs.coroot.com/alerting/webhook/?example=plain_text
+		log.Printf("RAW webhook body (text): %s", string(body))
 
-		// Validating required fields
-		if cfg.IgnoreEmptySummary &&
-			len(payload.Summary) == 1 &&
-			payload.Summary[0] == "No notable changes" {
+		// ignoring if message include "No notable changes"
+		if cfg.IgnoreEmptySummary && strings.Contains(string(body), "No notable changes") {
 			log.Println("Ignored: summary contains only 'No notable changes'")
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
-
-		// Building message
-		text := fmt.Sprintf("%s: %s\n", payload.Status, payload.Application)
-		for _, line := range payload.Summary {
-			text += "- " + line + "\n"
-		}
-		text += "\n" + payload.URL
-
-		if err := vk.SendMessage(cfg, text); err != nil {
+		// send the final text
+		if err := vk.SendMessage(cfg, string(body)); err != nil {
 			log.Println("Failed to send message to VK:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
+		// http status OK
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 

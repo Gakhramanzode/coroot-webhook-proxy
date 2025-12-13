@@ -10,13 +10,13 @@ import (
 )
 
 func SendMessage(cfg config.Config, text string) error {
-	fullURL := fmt.Sprintf(
-		"%s?text=%s&chatId=%s&token=%s",
-		cfg.VKURL,
-		url.QueryEscape(text),
-		url.QueryEscape(cfg.ChatID),
-		url.QueryEscape(cfg.Token),
-	)
+	v := url.Values{}
+	v.Set("text", text)
+	v.Set("chatId", cfg.ChatID)
+	v.Set("token", cfg.Token)
+	v.Set("parseMode", "HTML")
+
+	fullURL := cfg.VKURL + "?" + v.Encode()
 
 	resp, err := http.Get(fullURL)
 	if err != nil {
