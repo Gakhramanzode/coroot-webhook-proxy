@@ -1,26 +1,43 @@
 # Coroot Webhook Proxy
-
-This app receives webhooks from Coroot.
-It receives JSON data. It checks the status and message. Then it sends message to VK Teams.
+This app receives webhooks from [Coroot](https://github.com/coroot/coroot).
+It receives JSON data. It checks the status and message. Then it sends message to [VK Teams](https://teams.vk.com/botapi/).
 
 ## How it works
-
-1. Coroot sends a POST-response.
+1. Coroot sends a POST-response to Coroot Webhook Proxy.
 2. The app reads the JSON.
 3. It creates a text message.
 4. It sends the message to VK Teams.
 
 ## How to run
-
-1. Build the Docker image:
+1. Clone this repo.
+2. Build the Docker image:
 ```bash
-docker build -t coroot-webhook-proxy .
+docker build -t coroot-webhook-proxy:v0.1.0 .
 ```
-2. Run in Kubernetes. Use Deployment, Service, Ingress.
-3. Set environment variables:
-`VK_URL` - API VK Teams URL
-`VK_CHAT_ID` - Chat ID
-`VK_TOKEN` - Access token
+or pull image from [github](https://github.com/Gakhramanzode/coroot-webhook-proxy/pkgs/container/coroot-webhook-proxy).
+
+3. Run in Docker:
+```bash
+docker run --name coroot-webhook-proxy -p 8080:8080 \
+-e VK_URL=vk \
+-e VK_CHAT_ID=chat \
+-e VK_TOKEN=token \
+coroot-webhook-proxy:v0.1.0
+```
+or run in Kubernetes. Use Deployment, Service, Ingress, Secrets.
+
+4. Set environment variables:
+- `VK_URL` - API VK Teams URL
+- `VK_CHAT_ID` - Chat ID
+- `VK_TOKEN` - Access token
+
+and some envs for Coroot OpenTelemetry Integration (more info about Coroot [tracing](https://docs.coroot.com/tracing/overview)):
+- `OTEL_SERVICE_NAME`
+- `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_PROTOCOL`
+- `OTEL_METRICS_EXPORTER`
+- `OTEL_EXPORTER_OTLP_HEADERS`
 
 ## Example
 Example JSON from Coroot:
@@ -53,9 +70,7 @@ The app responds on patch `/health`
 Kubernetes use this endpoint patch to check if the app is working.
 
 ## Schema
-
 coroot -> coroot-webhook-proxy -> VK Teams
 
 ## Coroot documentation
-
 Link - https://docs.coroot.com/alerting/webhook/
