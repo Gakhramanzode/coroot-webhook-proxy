@@ -1,7 +1,6 @@
 package vk
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
